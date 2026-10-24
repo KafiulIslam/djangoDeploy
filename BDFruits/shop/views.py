@@ -1,6 +1,6 @@
 from django.views import View
-from .forms import CustomerRegistrationForm, LoginForm, CustomerProfileForm
-from .models import Fruit, Customer
+from .forms import CustomerRegistrationForm, LoginForm, CustomerProfileForm, CustomerAddressForm
+from .models import Fruit, Customer, CustomerAddress
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
@@ -68,3 +68,24 @@ class CustomerProfileView(LoginRequiredMixin, View):
             messages.success(request, 'Congratulations! Profile updated successfully!')
             return redirect('profile')
         return render(request, 'profile.html', {'form': form})
+
+
+# Customer Address
+class CustomerAddressView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
+    def get(self, request):
+        address = CustomerAddress.objects.filter(user=request.user).first()
+        form = CustomerAddressForm(instance=address)
+        return render(request, 'address.html', {'address': form})
+
+    def post(self, request):
+        address = CustomerAddress.objects.filter(user=request.user).first()
+        form = CustomerAddressForm(request.POST, instance=address)
+        if form.is_valid():
+            customerAddress = form.save(commit=False)
+            customerAddress.user = request.user
+            customerAddress.save()
+            messages.success(request, 'Congratulations! Address updated successfully!')
+            return redirect('address')
+        return render(request, 'address.html', {'address': form})

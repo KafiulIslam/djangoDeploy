@@ -35,6 +35,13 @@ DIVISION_CHOICES = (
     ('Sylhet', 'Sylhet'),
 )
 
+# Address Type choices
+ADDRESS_TYPE_CHOICES = (
+    ('Home', 'Home'),
+    ('Office', 'Office'),
+    ('Apartment', 'Apartment')
+)
+
 
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -47,3 +54,16 @@ class Customer(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class CustomerAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    division = models.CharField(choices=DIVISION_CHOICES, max_length=50)
+    district = models.CharField(max_length=200)
+    thana = models.CharField(max_length=200)
+    roadNumber = models.CharField(max_length=500)
+    zipCode = models.IntegerField()
+    addressType = models.CharField(choices=ADDRESS_TYPE_CHOICES, max_length=20)
+
+    def __str__(self):
+        return self.district

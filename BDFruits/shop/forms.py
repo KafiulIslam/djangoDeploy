@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField
 from django.contrib.auth.models import User
-from .models import Customer
+from .models import Customer, CustomerAddress
 from django.utils.translation import gettext, gettext_lazy as _
 
 
@@ -36,4 +36,19 @@ class CustomerProfileForm(forms.ModelForm):
                    'thana': forms.TextInput(attrs=form_control_attrs),
                    'villorroad': forms.TextInput(attrs=form_control_attrs),
                    'zipcode': forms.NumberInput(attrs=form_control_attrs)
+                   }
+
+
+# Customer form
+class CustomerAddressForm(forms.ModelForm):
+    class Meta:
+        model = CustomerAddress
+        form_control_attrs = {'class': 'form-control'}
+        fields = ['division', 'district', 'thana', 'roadNumber', 'zipCode', 'addressType']
+        widgets = {'division': forms.Select(attrs=form_control_attrs),
+                   'district': forms.TextInput(attrs=form_control_attrs),
+                   'thana': forms.TextInput(attrs=form_control_attrs),
+                   'roadNumber': forms.TextInput(attrs=form_control_attrs),
+                   'zipCode': forms.NumberInput(attrs=form_control_attrs),
+                   'addressType': forms.Select(attrs=form_control_attrs)
                    }

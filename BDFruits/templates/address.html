@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Address</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="goto-here">
+    <div class="py-1 bg-primary">
+        <div class="container">
+            <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+                <div class="col-lg-12 d-block">
+                    <div class="row d-flex">
+                        <div class="col-md pr-4 d-flex topper align-items-center">
+                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
+                            <span class="text">+ 1235 2355 98</span>
+                        </div>
+                        <div class="col-md pr-4 d-flex topper align-items-center">
+                            <div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
+                            <span class="text">youremail@email.com</span>
+                        </div>
+                        <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+                            <span class="text">3-5 Business days delivery &amp; Free Returns</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'fruit-list' %}">Vegefoods</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="{% url 'fruit-list' %}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-link">Logout</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                    <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
+                    {% endif %}
+                    <li class="nav-item cta cta-colored"><a href="{% url 'profile' %}" class="nav-link" aria-label="Profile"><span class="icon-person"></span></a></li>
+                    <li class="nav-item cta cta-colored active"><a href="{% url 'address' %}" class="nav-link" aria-label="Address"><span class="icon-map-marker"></span></a></li>
+                    <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-8 heading-section text-center">
+                    <span class="subheading">Delivery</span>
+                    <h2 class="mb-3">Your address</h2>
+                    <p>Add the address where your fruit order should be delivered.</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-3 mb-4">
+                    <ul class="list-unstyled">
+                        <li class="mb-3"><a href="{% url 'profile' %}" class="btn btn-primary btn-outline-primary py-3 px-4">Profile</a></li>
+                        <li><a href="{% url 'address' %}" class="btn btn-primary py-3 px-4">Address</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-7">
+                    <form action="{% url 'address' %}" method="post" class="bg-white p-4 p-md-5" style="border: 1px solid #f0f0f0;">
+                        {% csrf_token %}
+                        {% if address.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in address.non_field_errors %}
+                            <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% for fm in address %}
+                        <div class="form-group">
+                            {{ fm.label_tag }}
+                            {{ fm }}
+                            {% if fm.errors %}
+                            <small class="text-danger">{{ fm.errors|striptags }}</small>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <div class="form-group mb-0">
+                            <button type="submit" class="btn btn-primary py-3 px-5">Submit</button>
+                        </div>
+                    </form>
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p class="alert alert-{{ message.tags }} mt-4 mb-0">{{ message }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

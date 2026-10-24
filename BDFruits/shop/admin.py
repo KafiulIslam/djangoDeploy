@@ -4,7 +4,7 @@ from django.contrib import admin
 
 
 from django.contrib import admin
-from .models import Fruit, Customer
+from .models import Fruit, Customer, CustomerAddress
 
 @admin.register(Fruit)
 class FruitAdmin(admin.ModelAdmin):
@@ -13,3 +13,10 @@ class FruitAdmin(admin.ModelAdmin):
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'name', 'division', 'district', 'thana', 'villorroad', 'zipcode']
+
+
+@admin.register(CustomerAddress)
+class CustomerAddressAdmin(admin.ModelAdmin):
+    list_display = ['id', 'user', 'division', 'district', 'thana', 'roadNumber', 'zipCode', 'addressType']
+
+

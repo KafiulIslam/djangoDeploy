@@ -69,6 +69,7 @@
                     <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
                     {% endif %}
                     <li class="nav-item cta cta-colored active"><a href="{% url 'profile' %}" class="nav-link" aria-label="Profile"><span class="icon-person"></span></a></li>
+                    <li class="nav-item cta cta-colored"><a href="{% url 'address' %}" class="nav-link" aria-label="Address"><span class="icon-map-marker"></span></a></li>
                     <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
                 </ul>
             </div>
@@ -87,7 +88,8 @@
             <div class="row justify-content-center">
                 <div class="col-md-3 mb-4">
                     <ul class="list-unstyled">
-                        <li><a href="{% url 'profile' %}" class="btn btn-primary py-3 px-4">Profile</a></li>
+                        <li class="mb-3"><a href="{% url 'profile' %}" class="btn btn-primary py-3 px-4">Profile</a></li>
+                        <li><a href="{% url 'address' %}" class="btn btn-primary btn-outline-primary py-3 px-4">Address</a></li>
                     </ul>
                 </div>
                 <div class="col-md-7">
