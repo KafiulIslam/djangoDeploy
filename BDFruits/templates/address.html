@@ -70,7 +70,7 @@
                     {% endif %}
                     <li class="nav-item cta cta-colored"><a href="{% url 'profile' %}" class="nav-link" aria-label="Profile"><span class="icon-person"></span></a></li>
                     <li class="nav-item cta cta-colored active"><a href="{% url 'address' %}" class="nav-link" aria-label="Address"><span class="icon-map-marker"></span></a></li>
-                    <li class="nav-item cta cta-colored"><a href="cart.html" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+                    <li class="nav-item cta cta-colored"><a href="{% url 'showcart' %}" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
                 </ul>
             </div>
         </div>
@@ -93,7 +93,27 @@
                     </ul>
                 </div>
                 <div class="col-md-7">
-                    <form action="{% url 'address' %}" method="post" class="bg-white p-4 p-md-5" style="border: 1px solid #f0f0f0;">
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p class="alert alert-{{ message.tags }} mb-4">{{ message }}</p>
+                    {% endfor %}
+                    {% endif %}
+
+                    {% if addresses %}
+                    {% for item in addresses %}
+                    <div class="bg-white p-4 mb-3" style="border: 1px solid #f0f0f0;">
+                        <h3 class="h5 mb-2">{{ item.addressType }}</h3>
+                        <p class="mb-1">{{ item.roadNumber }}</p>
+                        <p class="mb-1">{{ item.thana }}, {{ item.district }}</p>
+                        <p class="mb-0">{{ item.division }} {{ item.zipCode }}</p>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <p class="mb-4">You have not saved an address yet.</p>
+                    {% endif %}
+
+                    {% if show_form %}
+                    <form action="{% url 'address' %}" method="post" class="bg-white p-4 p-md-5 mt-4" style="border: 1px solid #f0f0f0;">
                         {% csrf_token %}
                         {% if address.non_field_errors %}
                         <div class="alert alert-danger">
@@ -113,12 +133,11 @@
                         {% endfor %}
                         <div class="form-group mb-0">
                             <button type="submit" class="btn btn-primary py-3 px-5">Submit</button>
+                            <a href="{% url 'address' %}" class="btn btn-primary btn-outline-primary py-3 px-5 ml-2">Cancel</a>
                         </div>
                     </form>
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p class="alert alert-{{ message.tags }} mt-4 mb-0">{{ message }}</p>
-                    {% endfor %}
+                    {% else %}
+                    <a href="{% url 'address' %}?new=1" class="btn btn-primary py-3 px-5 mt-2">Add New Address</a>
                     {% endif %}
                 </div>
             </div>

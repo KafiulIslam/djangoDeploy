@@ -67,3 +67,16 @@ class CustomerAddress(models.Model):
 
     def __str__(self):
         return self.district
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    fruit = models.ForeignKey(Fruit, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f'{self.fruit.title} x {self.quantity}'
+
+    @property
+    def line_total(self):
+        return self.quantity * self.fruit.discounted_price

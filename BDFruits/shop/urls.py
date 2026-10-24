@@ -15,6 +15,8 @@ urlpatterns = [
                   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
                   path('profile/', views.CustomerProfileView.as_view(), name='profile'),
                   path('address/', views.CustomerAddressView.as_view(), name='address'),
+                  path('add-to-cart/<int:fruit_id>/', views.add_to_cart, name='add-to-cart'),
+                  path('cart/', views.show_cart, name='showcart'),
                   # path('register/', views.CustomRegistrationView.as_view(), name='customerregistration'),
                   #
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
