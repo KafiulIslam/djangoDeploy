@@ -1,18 +1,14 @@
-from django.http import HttpRequest
-from django.shortcuts import render
 from django.views import View
-from .forms import CustomerRegistrationForm, LoginForm
-from .models import Fruit
+from .forms import CustomerRegistrationForm, LoginForm, CustomerProfileForm
+from .models import Fruit, Customer
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
-
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # Fruit list
-
 class FruitListView(View):
     def get(self, request):
         fruits = Fruit.objects.all()
@@ -20,14 +16,13 @@ class FruitListView(View):
 
 
 # Fruit details
-
 class FruitDetail(View):
     def get(self, request, id):
         fruit = Fruit.objects.get(id=id)
         return render(request, 'product-single.html', {'fruit': fruit})
 
 
-#account creation
+# account creation
 class CustomRegistrationView(View):
     def get(self, request):
         form = CustomerRegistrationForm()
@@ -42,7 +37,7 @@ class CustomRegistrationView(View):
         return render(request, 'signup.html', {'form': form})
 
 
-#Login
+# Login
 class CustomLoginView(LoginView):
     template_name = 'login.html'
     form_class = LoginForm
@@ -52,3 +47,24 @@ class CustomLoginView(LoginView):
     def form_valid(self, form):
         messages.success(self.request, 'Logged in successfully.')
         return super().form_valid(form)
+
+
+# Customer profile
+class CustomerProfileView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
+    def get(self, request):
+        customer = Customer.objects.filter(user=request.user).first()
+        form = CustomerProfileForm(instance=customer)
+        return render(request, 'profile.html', {'form': form})
+
+    def post(self, request):
+        customer = Customer.objects.filter(user=request.user).first()
+        form = CustomerProfileForm(request.POST, instance=customer)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+            messages.success(request, 'Congratulations! Profile updated successfully!')
+            return redirect('profile')
+        return render(request, 'profile.html', {'form': form})

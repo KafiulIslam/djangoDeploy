@@ -1,7 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField, PasswordChangeForm, \
-    PasswordResetForm, SetPasswordForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UsernameField
 from django.contrib.auth.models import User
+from .models import Customer
 from django.utils.translation import gettext, gettext_lazy as _
 
 
@@ -17,7 +17,23 @@ class CustomerRegistrationForm(UserCreationForm):
         labels = {'email': 'Email'}
         widget = {'username': forms.TextInput(attrs={'class': 'form-control'})}
 
+
 class LoginForm(AuthenticationForm):
     username = UsernameField(widget=forms.TextInput(attrs={'autofocus': True, 'class': 'form-control'}))
     password = forms.CharField(label=_('Password'), strip=False, widget=forms.PasswordInput(
         attrs={'autocomplete': 'current_password', 'class': 'form-control'}))
+
+
+# Customer form
+class CustomerProfileForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        form_control_attrs = {'class': 'form-control'}
+        fields = ['name', 'division', 'district', 'thana', 'villorroad', 'zipcode']
+        widgets = {'name': forms.TextInput(attrs=form_control_attrs),
+                   'division': forms.Select(attrs=form_control_attrs),
+                   'district': forms.TextInput(attrs=form_control_attrs),
+                   'thana': forms.TextInput(attrs=form_control_attrs),
+                   'villorroad': forms.TextInput(attrs=form_control_attrs),
+                   'zipcode': forms.NumberInput(attrs=form_control_attrs)
+                   }

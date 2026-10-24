@@ -13,6 +13,7 @@ urlpatterns = [
                   path('signup/', views.CustomRegistrationView.as_view(), name='signup'),
                   path('login/', views.CustomLoginView.as_view(), name='login'),
                   path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+                  path('profile/', views.CustomerProfileView.as_view(), name='profile'),
                   # path('register/', views.CustomRegistrationView.as_view(), name='customerregistration'),
                   #
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
