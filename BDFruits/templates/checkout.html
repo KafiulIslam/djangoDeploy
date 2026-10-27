@@ -1,0 +1,224 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Checkout</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Amatic+SC:400,700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/open-iconic-bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ionicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="goto-here">
+<div class="py-1 bg-primary">
+    <div class="container">
+        <div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
+            <div class="col-lg-12 d-block">
+                <div class="row d-flex">
+                    <div class="col-md pr-4 d-flex topper align-items-center">
+                        <div class="icon mr-2 d-flex justify-content-center align-items-center"><span
+                                class="icon-phone2"></span></div>
+                        <span class="text">+ 1235 2355 98</span>
+                    </div>
+                    <div class="col-md pr-4 d-flex topper align-items-center">
+                        <div class="icon mr-2 d-flex justify-content-center align-items-center"><span
+                                class="icon-paper-plane"></span></div>
+                        <span class="text">youremail@email.com</span>
+                    </div>
+                    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
+                        <span class="text">3-5 Business days delivery &amp; Free Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'fruit-list' %}">Vegefoods</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a href="{% url 'fruit-list' %}" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
+                <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Logout</button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item"><a href="{% url 'login' %}" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="{% url 'signup' %}" class="nav-link">Signup</a></li>
+                {% endif %}
+                <li class="nav-item cta cta-colored"><a href="{% url 'profile' %}" class="nav-link"
+                                                        aria-label="Profile"><span class="icon-person"></span></a></li>
+                <li class="nav-item cta cta-colored"><a href="{% url 'address' %}" class="nav-link"
+                                                        aria-label="Address"><span class="icon-map-marker"></span></a>
+                </li>
+                <li class="nav-item cta cta-colored"><a href="{% url 'showcart' %}" class="nav-link"
+                                                        aria-label="Cart"><span class="icon-shopping_cart"></span>[{{
+                    cart_items|length }}]</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="ftco-section">
+    <div class="container">
+        <div class="row justify-content-center mb-4">
+            <div class="col-md-8 heading-section text-center">
+                <span class="subheading">Shop</span>
+                <h2 class="mb-3">Checkout</h2>
+                <p>Confirm your delivery address and place your order.</p>
+            </div>
+        </div>
+
+        {% if messages %}
+        {% for message in messages %}
+        <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+
+        {% if cart_items %}
+        <form method="post" action="{% url 'initiate_payment' %}" class="billing-form">
+            {% csrf_token %}
+            <div class="row">
+                {# Left: selectable address list — selected address_id is posted with checkout #}
+                <div class="col-lg-7 mb-5 mb-lg-0">
+                    <div class="cart-detail p-3 p-md-4">
+                        <h3 class="billing-heading mb-4">Select Delivery Address</h3>
+
+                        {% if addresses %}
+                        {% for item in addresses %}
+                        <label class="d-block bg-white p-3 mb-3"
+                               style="border: 1px solid #82ae46; border-radius: 4px; cursor: pointer;">
+                            <div class="d-flex align-items-start">
+                                <input type="radio"
+                                       name="address_id"
+                                       value="{{ item.id }}"
+                                       class="mt-1 mr-3"
+                                       {% if forloop.first %}checked{% endif %}
+                                       required>
+                                <div>
+                                    <strong class="d-block mb-1">{{ item.addressType }}</strong>
+                                    <span class="d-block text-muted">
+                                            {{ item.roadNumber }}<br>
+                                            {{ item.thana }}, {{ item.district }}<br>
+                                            {{ item.division }} — {{ item.zipCode }}
+                                        </span>
+                                </div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                        <a href="{% url 'address' %}?new=1" class="btn btn-primary btn-outline-primary py-2 px-4">Add
+                            new address</a>
+                        {% else %}
+                        <div class="alert alert-warning mb-0">
+                            You have no saved address yet.
+                            <a href="{% url 'address' %}?new=1">Add an address</a> before placing an order.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# Right: order summary + payment + place order #}
+                <div class="col-lg-5">
+                    <div class="cart-detail cart-total p-3 p-md-4 mb-4">
+                        <h3 class="billing-heading mb-4">Order Summary</h3>
+                        {% for item in cart_items %}
+                        <p class="d-flex">
+                            <span>{{ item.fruit.title }} × {{ item.quantity }}</span>
+                            <span>৳{{ item.line_total|floatformat:0 }}</span>
+                        </p>
+                        {% endfor %}
+                        <hr>
+                        <p class="d-flex">
+                            <span>Subtotal</span>
+                            <span>৳{{ amount|floatformat:0 }}</span>
+                        </p>
+                        <p class="d-flex">
+                            <span>Delivery</span>
+                            <span>৳{{ shipping_amount|floatformat:0 }}</span>
+                        </p>
+                        <hr>
+                        <p class="d-flex total-price">
+                            <span>Total</span>
+                            <span>৳{{ totalamount|floatformat:0 }}</span>
+                        </p>
+                    </div>
+
+                    <div class="cart-detail p-3 p-md-4">
+                        <h3 class="billing-heading mb-4">Payment Method</h3>
+                        <div class="form-group">
+                            <div class="radio">
+                                <label><input type="radio" name="payment_method" value="cod" class="mr-2" checked> Cash
+                                    on Delivery</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="radio">
+                                <label><input type="radio" name="payment_method" value="bkash" class="mr-2">
+                                    bKash / card (SSLCommerz)</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label><input type="checkbox" name="terms" value="1" class="mr-2" required> I accept the
+                                    terms and conditions</label>
+                            </div>
+                        </div>
+                        {% if addresses %}
+
+
+                        <p class="mb-0">
+
+                            <button type="submit" class="btn btn-primary py-3 px-4">Place order</button>
+
+                        </p>
+                        <p class="mt-3 mb-0">
+                            <a href="{% url 'showcart' %}" class="btn btn-primary btn-outline-primary py-2 px-4">Back to
+                                cart</a>
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <p>Your cart is empty.</p>
+                <a href="{% url 'fruit-list' %}" class="btn btn-primary py-3 px-4">Continue shopping</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

@@ -123,6 +123,22 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media'
 
 
+# SSLCommerz Sandbox Credentials
+SSLCZ_STORE_ID = 'coder6ae07c23b1285'
+SSLCZ_STORE_PASS = 'coder6ae07c23b1285@ssl'
+SSLCZ_IS_SANDBOX = True
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://sandbox.sslcommerz.com',
+    'https://securepay.sslcommerz.com',
+    'https://secure.sslcommerz.com',
+    'http://127.0.0.1',
+    'http://localhost'
+]
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

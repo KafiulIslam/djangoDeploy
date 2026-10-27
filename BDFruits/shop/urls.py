@@ -17,6 +17,12 @@ urlpatterns = [
                   path('address/', views.CustomerAddressView.as_view(), name='address'),
                   path('add-to-cart/<int:fruit_id>/', views.add_to_cart, name='add-to-cart'),
                   path('cart/', views.show_cart, name='showcart'),
-                  # path('register/', views.CustomRegistrationView.as_view(), name='customerregistration'),
-                  #
+                  path('checkout/', views.checkout, name='checkout'),
+
+                  path('initiate-payment/', views.initiate_payment, name='initiate_payment'),
+                  path('payment/success/', views.payment_success, name='payment_success'),
+                  path('payment/fail/', views.payment_fail, name='payment_fail'),
+                  path('payment/cancel/', views.payment_cancel, name='payment_cancel'),
+                  path('orders/', views.orders, name='orders'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -80,3 +80,28 @@ class Cart(models.Model):
     @property
     def line_total(self):
         return self.quantity * self.fruit.discounted_price
+
+
+
+STATUS_CHOICE = (
+    ('Pending', 'Pending'),
+    ('Accepted', 'Accepted'),
+    ('Packed', 'Packed'),
+    ('On the Way', 'On the Way'),
+    ('Delivered', 'Delivered'),
+    ('Cancel', 'Cancel')
+)
+
+class OrderPlaced(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    fruit = models.ForeignKey(Fruit, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    ordered_date = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICE, default='Pending')
+    tran_id = models.CharField(max_length=100, blank=True)
+    payment_method = models.CharField(max_length=20, default='cod')
+
+    def __str__(self):
+        return f'{self.fruit.title} x {self.quantity}'
+
