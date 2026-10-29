@@ -1,5 +1,6 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views import View
 from .forms import CustomerRegistrationForm, LoginForm, CustomerProfileForm, CustomerAddressForm
 from .models import Fruit, Customer, CustomerAddress, Cart, OrderPlaced
@@ -11,11 +12,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from sslcommerz_lib import SSLCOMMERZ
 from decimal import Decimal
 from django.contrib.auth.models import User
-
 from django.conf import settings
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
 from datetime import datetime
 import uuid
 
@@ -62,6 +61,7 @@ class CustomLoginView(LoginView):
 
 
 # Customer profile
+@method_decorator(login_required, name='dispatch')
 class CustomerProfileView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
@@ -83,6 +83,7 @@ class CustomerProfileView(LoginRequiredMixin, View):
 
 
 # Customer Address
+@method_decorator(login_required, name='dispatch')
 class CustomerAddressView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
@@ -123,7 +124,7 @@ def add_to_cart(request, fruit_id):
     messages.success(request, 'Item added to cart.')
     return redirect('showcart')
 
-
+@login_required(login_url='/login/')
 def show_cart(request):
     if not request.user.is_authenticated:
         return redirect('/login')
@@ -159,7 +160,7 @@ def checkout(request):
         'totalamount': total_amount,
     })
 
-
+@login_required(login_url='/login/')
 def _customer_for_order(user, address):
     """OrderPlaced needs a Customer row. Use the profile, or copy the chosen address."""
     customer = Customer.objects.filter(user=user).first()
@@ -175,7 +176,7 @@ def _customer_for_order(user, address):
         zipcode=address.zipCode,
     )
 
-
+@login_required(login_url='/login/')
 def _save_cart_as_orders(user, customer, cart_items, tran_id='', payment_method='cod'):
     for item in cart_items:
         OrderPlaced.objects.create(
